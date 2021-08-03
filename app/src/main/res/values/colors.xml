@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#416388</color>
+    <color name="colorPrimaryDark">#004164</color>
+    <color name="colorAccent">#FFFFFF</color>
+    <!--    <color name="bottomBar">#750505</color>-->
+    <color name="bottomBar">#263C61</color>
+    <color name="allBar">#405C5E</color>
+    <color name="oneBar">#612637</color>
+    <color name="twoBar">#442661</color>
+</resources>
