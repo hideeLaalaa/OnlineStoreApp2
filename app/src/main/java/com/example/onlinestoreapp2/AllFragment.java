@@ -180,6 +180,8 @@ public class AllFragment extends Fragment {
                                 // from, and the name of the view it is transitioning to, in the launched activity
                                 new Pair<>(v.findViewById(R.id.imageView),
                                         "picture"),
+                                new Pair<>(v.findViewById(R.id.description),
+                                        "content"),
                                 new Pair<>(v.findViewById(R.id.titled),
                                         "name"));
 

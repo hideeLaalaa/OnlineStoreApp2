@@ -88,13 +88,10 @@ public class CatOneDetailsActivity extends AppCompatActivity {
         String xDesc = intent.getStringExtra("description");
         xImage = intent.getStringExtra("image");
 
-        title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        title.setOnClickListener(v -> {
 //                loadBitmap();
-                nextSwatch(v);
-                swatchNumber++;
-            }
+            nextSwatch(v);
+            swatchNumber++;
         });
 
         // BEGIN_INCLUDE(detail_set_view_name)
@@ -185,22 +182,18 @@ public class CatOneDetailsActivity extends AppCompatActivity {
 
         Bitmap bitmap = ( (BitmapDrawable) imageView.getDrawable() ).getBitmap();
 
-        Palette.from(bitmap).maximumColorCount(55).generate(new Palette.PaletteAsyncListener() {
-            @Override
-            public void onGenerated(@Nullable Palette palette) {
-                darkMutedSwatch = palette.getDarkMutedSwatch();
-                dominantSwatch = palette.getDominantSwatch();
-                lightMutedSwatch = palette.getLightMutedSwatch();
-                darkVibrantSwatch = palette.getDarkVibrantSwatch();
-                lightVibrantSwatch = palette.getLightVibrantSwatch();
-                mutedSwatch = palette.getMutedSwatch();
-                vibrantSwatch = palette.getVibrantSwatch();
+        Palette.from(bitmap).maximumColorCount(55).generate(palette -> {
+            darkMutedSwatch = palette.getDarkMutedSwatch();
+            dominantSwatch = palette.getDominantSwatch();
+            lightMutedSwatch = palette.getLightMutedSwatch();
+            darkVibrantSwatch = palette.getDarkVibrantSwatch();
+            lightVibrantSwatch = palette.getLightVibrantSwatch();
+            mutedSwatch = palette.getMutedSwatch();
+            vibrantSwatch = palette.getVibrantSwatch();
 
-                getWindow().findViewById(R.id.rootLayout_cat1_details).setBackgroundColor(darkMutedSwatch.getRgb());
-                description.setTextColor(Color.WHITE );
+            getWindow().findViewById(R.id.rootLayout_cat1_details).setBackgroundColor(darkMutedSwatch.getRgb());
+            description.setTextColor(Color.WHITE );
 //                description.setTextColor(darkVibrantSwatch.getTitleTextColor());
-
-            }
 
         });
     }
