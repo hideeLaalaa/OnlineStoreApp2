@@ -1,9 +1,11 @@
 package com.example.onlinestoreapp2;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
+import androidx.palette.graphics.Palette;
 
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -12,12 +14,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.transition.Transition;
 import android.view.MenuItem;
@@ -42,6 +46,16 @@ public class CatTwoDetailsActivity extends AppCompatActivity {
     private TextView title;
     private TextView description;
     private String xImage;
+
+    private Palette.Swatch vibrantSwatch;
+    private Palette.Swatch lightVibrantSwatch;
+    private Palette.Swatch darkVibrantSwatch;
+    private Palette.Swatch mutedSwatch;
+    private Palette.Swatch lightMutedSwatch;
+    private Palette.Swatch darkMutedSwatch;
+
+    private int swatchNumber;
+    private Palette.Swatch dominantSwatch;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -79,6 +93,15 @@ public class CatTwoDetailsActivity extends AppCompatActivity {
         String xDesc = intent.getStringExtra("description");
         xImage = intent.getStringExtra("image");
 
+        title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                loadBitmap();
+                nextSwatch(v);
+                swatchNumber++;
+            }
+        });
+
         // BEGIN_INCLUDE(detail_set_view_name)
         /*
          * Set the name of the view's which will be transition to, using the static values above.
@@ -90,6 +113,7 @@ public class CatTwoDetailsActivity extends AppCompatActivity {
         ViewCompat.setTransitionName(description, "content");
         // END_INCLUDE(detail_set_view_name)
 
+        loadFullSizeImage();
         title.setText(xTitle);
         description.setText(xDesc);
 
@@ -107,8 +131,24 @@ public class CatTwoDetailsActivity extends AppCompatActivity {
 
         } else {
             // If all other cases we should just load the full-size image now
-            loadFullSizeImage();
         }
+
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                if (imageView.getDrawable()!=null){
+//                    loadBitmap();
+////                    getWindow().findViewById(R.id.rootLayout_cat2_details).setBackgroundColor(darkMutedSwatch.getRgb());
+////                    description.setTextColor(darkMutedSwatch.getTitleTextColor());
+//
+//                }
+//
+//            }
+//
+//        },2000);
+
+
 
     }
 
@@ -129,10 +169,11 @@ public class CatTwoDetailsActivity extends AppCompatActivity {
                 @Override
                 public void onTransitionEnd(Transition transition) {
                     // As the transition has ended, we can now load the full-size image
-                    loadFullSizeImage();
+//                    loadFullSizeImage();
 
                     // Make sure we remove ourselves as a listener
                     transition.removeListener(this);
+
                 }
 
                 @Override
@@ -167,16 +208,41 @@ public class CatTwoDetailsActivity extends AppCompatActivity {
         Picasso.get().load(xImage).networkPolicy(NetworkPolicy.OFFLINE).into(imageView, new Callback() {
             @Override
             public void onSuccess() {
+                loadBitmap();
 
             }
 
             @Override
             public void onError(Exception e) {
                 Picasso.get().load(xImage).into(imageView);
+                loadBitmap();
+
             }
         });
 
+    }
 
+    private void loadBitmap(){
+
+        Bitmap bitmap = ( (BitmapDrawable) imageView.getDrawable() ).getBitmap();
+
+        Palette.from(bitmap).maximumColorCount(55).generate(new Palette.PaletteAsyncListener() {
+            @Override
+            public void onGenerated(@Nullable Palette palette) {
+                darkMutedSwatch = palette.getDarkMutedSwatch();
+                lightMutedSwatch = palette.getLightMutedSwatch();
+                dominantSwatch = palette.getDominantSwatch();
+                darkVibrantSwatch = palette.getDarkVibrantSwatch();
+                lightVibrantSwatch = palette.getLightVibrantSwatch();
+                mutedSwatch = palette.getMutedSwatch();
+                vibrantSwatch = palette.getVibrantSwatch();
+
+                getWindow().findViewById(R.id.rootLayout_cat2_details).setBackgroundColor(darkMutedSwatch.getRgb());
+                description.setTextColor(Color.WHITE );
+//                description.setTextColor(darkVibrantSwatch.getTitleTextColor());
+
+            }
+        });
     }
 
     private  File createImageFile() throws IOException {
@@ -225,6 +291,54 @@ public class CatTwoDetailsActivity extends AppCompatActivity {
 
         downloadManager.enqueue(request);
 
+
+    }
+
+    private void nextSwatch(View view){
+
+        Palette.Swatch current = null;
+
+        switch (swatchNumber){
+
+            case 0:
+                current = vibrantSwatch;
+                title.setText("Vibrant Swatch");
+                break;
+            case 1:
+                current = mutedSwatch;
+                title.setText("Muted Swatch");
+                break;
+            case 2:
+                current = lightVibrantSwatch;
+                title.setText("Light Vibrant Swatch");
+                break;
+            case 3:
+                current = darkVibrantSwatch;
+                title.setText("Dark Vibrant Swatch");
+                break;
+            case 4:
+                current = lightMutedSwatch;
+                title.setText("Light Muted Swatch");
+                break;
+            case 5:
+                current = darkMutedSwatch;
+                title.setText("Dark Muted Swatch");
+                break;
+            default:
+                swatchNumber=0;
+                current=dominantSwatch;
+                title.setText("Dominant");
+
+        }
+        if (current!=null){
+            getWindow().findViewById(R.id.rootLayout_cat2_details).setBackgroundColor(current.getRgb());
+            ((TextView) ( getWindow().findViewById(R.id.title_description) )).setTextColor(current.getTitleTextColor());
+
+        }else{
+            getWindow().findViewById(R.id.rootLayout_cat2_details).setBackgroundColor(Color.WHITE);
+            ((TextView) ( getWindow().findViewById(R.id.title_description) )).setTextColor(Color.BLACK);
+
+        }
 
     }
 

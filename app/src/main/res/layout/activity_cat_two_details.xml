@@ -50,6 +50,8 @@
 
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout_cat2_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -66,7 +68,8 @@
           android:id="@+id/image_data"
           android:layout_width="match_parent"
           android:layout_height="400dp"
-          android:scaleType="fitXY" />
+          android:scaleType="fitXY"
+          app:srcCompat="@drawable/googleg_disabled_color_18" />
 
     </FrameLayout>
 
@@ -84,9 +87,13 @@
         android:id="@+id/title_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
         android:padding="16dp"
-        android:text="@string/bacon_ipsum"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:text="alova aluta alova aluta"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:typeface="sans" />
 
   </LinearLayout>
 
