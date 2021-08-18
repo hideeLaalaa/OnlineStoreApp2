@@ -84,6 +84,9 @@ public class MainActivity extends AppCompatActivity {
                         getWindow().setStatusBarColor(Color.parseColor("#612637"));
                         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xFF8A4659));
 
+//                        getResources().getDrawable(R.drawable.back_nav).setTint(Color.RED);
+//                        getSupportActionBar().setHomeAsUpIndicator();
+
                         navigate.setItemBackground(null);
                         new Handler().postDelayed(new Runnable() {
                             @Override

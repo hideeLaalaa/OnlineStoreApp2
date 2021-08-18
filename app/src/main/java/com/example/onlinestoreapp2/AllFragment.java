@@ -3,6 +3,7 @@ package com.example.onlinestoreapp2;
 import android.app.ActivityOptions;
 import android.content.ClipData;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
@@ -11,6 +12,7 @@ import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.TransitionInflater;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.onlinestoreapp2.Model.Data;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -34,6 +37,7 @@ public class AllFragment extends Fragment {
 
     private RecyclerView allRecycler;
     private RecyclerView recyclerCatTwo;
+    ShimmerFrameLayout shimmer;
 
     //Firebase.
 
@@ -52,6 +56,7 @@ public class AllFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_all, container, false);
+        View view2 = inflater.inflate(R.layout.item_data, container, false);
 
         xCartOneDatabase = FirebaseDatabase.getInstance().getReference().child("CatOneDatabase");
 
@@ -74,6 +79,8 @@ public class AllFragment extends Fragment {
         recyclerCatTwo.setHasFixedSize(true);
         recyclerCatTwo.setLayoutManager(layoutManagerCatTwo );
 
+//        shimmer = (ShimmerFrameLayout) view2.findViewById(R.id.shimmerContainer);
+//        shimmer.startShimmer();
 
         return  view;
     }
@@ -81,6 +88,7 @@ public class AllFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+//        shimmer.stopShimmer();
 
         FirebaseRecyclerAdapter<Data,CatOneViewHolder> adapterOne = new FirebaseRecyclerAdapter<Data, CatOneViewHolder>
                 (
@@ -90,6 +98,15 @@ public class AllFragment extends Fragment {
                         xCartOneDatabase
 
                 ) {
+
+            @Override
+            public Data getItem(int position) {
+                return super.getItem(position);
+//                if(position!=2)
+//                else
+//                    return new Data("R.drawable.woman","Trial and local","9","Me trying loading from my db");
+            }
+
             @Override
             protected void populateViewHolder(CatOneViewHolder viewHolder, Data model, int i) {
 
@@ -102,7 +119,7 @@ public class AllFragment extends Fragment {
                     public void onClick(View v) {
 
                         Intent intent = new Intent(getActivity(),CatOneDetailsActivity.class);
-
+//                        shimmer.stopShimmer();
                         intent.putExtra("title",model.getTitle());
                         intent.putExtra("description",model.getDescription());
                         intent.putExtra("image",model.getImage());
@@ -152,6 +169,8 @@ public class AllFragment extends Fragment {
                         xCartTwoDatabase
 
                 ) {
+
+
             @Override
             protected void populateViewHolder(CatTwoViewHolder viewHolder, Data model, int i) {
 
@@ -212,6 +231,14 @@ public class AllFragment extends Fragment {
 
         recyclerCatTwo.setAdapter(adapterTwo);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setSharedElementReturnTransition(TransitionInflater.from(
+                    getActivity()).inflateTransition(R.transition.change_image_transform));
+            setExitTransition(TransitionInflater.from(
+                    getActivity()).inflateTransition(android.R.transition.fade));
+
+        }
+
     }
 
     public static class  CatOneViewHolder extends RecyclerView.ViewHolder{
@@ -221,6 +248,7 @@ public class AllFragment extends Fragment {
         public CatOneViewHolder(View itemView){
             super(itemView);
             view = itemView;
+
         }
 
         public  void setTitle(String title){
@@ -236,17 +264,24 @@ public class AllFragment extends Fragment {
         public void setImage(final String image){
             final ImageView xImage = view.findViewById(R.id.imageView);
 
-            Picasso.get().load(image).networkPolicy(NetworkPolicy.OFFLINE).into(xImage, new Callback() {
-                @Override
-                public void onSuccess() {
+            if (image.contains("http")){
 
-                }
+                Picasso.get().load(image).networkPolicy(NetworkPolicy.OFFLINE).into(xImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
 
-                @Override
-                public void onError(Exception e) {
-                    Picasso.get().load(image).fit().into(xImage);
-                }
-            });
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Picasso.get().load(image).fit().into(xImage);
+                    }
+                });
+            }else {
+                Picasso.get().load(R.drawable.woman).into(xImage);
+            }
+
+
         }
 
     }

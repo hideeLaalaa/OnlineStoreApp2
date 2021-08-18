@@ -4,31 +4,27 @@
 <!--    android:viewportWidth="24"-->
 <!--    android:viewportHeight="24"-->
 <!--    android:tintMode="screen"-->
-
 <!--    android:tint="#474747"-->
 <!--    android:alpha="1" android:opticalInsetBottom="5dp">-->
 
 <!--  <group android:scaleX="1"-->
 <!--      android:scaleY="1"-->
-<!--      android:translateX="0" -->
+<!--      android:translateX="0"-->
 <!--      android:translateY="0">-->
 <!--    <path-->
 <!--        android:fillColor="@android:color/white"-->
-
 <!--        android:pathData="M21,11H6.83l3.58,-3.59L9,6l-6,6 6,6 1.41,-1.41L6.83,13H21z"/>-->
 <!--  </group>-->
 <!--</vector>-->
 
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
 
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval" android:useLevel="true">
+  <solid android:color="@color/bottomBar"/>
+  <corners
+      android:radius="100dp"
+      />
 
- <solid android:color="@color/bottomBar"/>
- <corners
-     android:radius="100dp"
-     />
+  <size android:height="50dp" android:width="50dp" />
 
- <size android:height="50dp" android:width="50dp" />
-
- <stroke android:color="#FFFFFF" android:width="1dp"/>
+  <stroke android:color="#FFFFFF" android:width="1dp"/>
 </shape>
-

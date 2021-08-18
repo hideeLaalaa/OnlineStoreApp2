@@ -71,7 +71,7 @@ public class CatTwoFragment extends Fragment {
 //            @Override
 //            protected void populateViewHolder(CatTwoViewHolder catTwoViewHolder, Data data, int i) {
 //
-//                catTwoViewHolder.setTitle(data.getTitle());
+//                catTwoViewHolder.setTitlFiree(data.getTitle());
 //                catTwoViewHolder.setDescription(data.getDescription());
 //
 //            }
@@ -119,7 +119,7 @@ public class CatTwoFragment extends Fragment {
 
                         ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation
                                 (
-                                        getActivity(),
+                                         getActivity(),
                                         new Pair<>(view.findViewById(R.id.imageview_grid),"picture"),
                                         new Pair<>(view.findViewById(R.id.title_grid),"data"),
                                         new Pair<>(view.findViewById(R.id.description_grid),"content")

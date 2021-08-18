@@ -16,6 +16,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
@@ -25,6 +26,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.transition.Transition;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -101,6 +103,37 @@ public class CatTwoDetailsActivity extends AppCompatActivity {
                 swatchNumber++;
             }
         });
+
+//        imageView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//
+//                if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction()==MotionEvent.ACTION_UP){
+//
+//                    Bitmap bitmap = imageView.getDrawingCache();
+////                    int pixel = bitmap.getPixel((int)getSupportActionBar().getCustomView().getX(),(int)event.getY());
+//                    int[] pixels = new int[bitmap.getByteCount()];
+//                    bitmap.getPixels(pixels,0,40,40,40,40,40);
+//
+//                    int r = Color.red(pixels[5]);
+//                    int g = Color.green(pixels[5]);
+//                    int b = Color.blue(pixels[5]);
+//
+//                    title.setBackgroundColor(Color.rgb(r,g,b));
+//                    description.setText("R: "+r+"\nG: "+g+"\nB: "+b);
+//
+//
+//                    final Drawable actionBar = getResources().getDrawable(R.drawable.ic_round_keyboard_backspace_24);
+//                    actionBar.setTint(Color.argb(250,200/(r+1),200/(g+1),200/(b+1) ));
+//                    getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_round_keyboard_backspace_24);
+//
+////                    getDrawable(R.id)
+//
+//                }
+//
+//                return true;
+//            }
+//        });
 
         // BEGIN_INCLUDE(detail_set_view_name)
         /*
@@ -224,6 +257,9 @@ public class CatTwoDetailsActivity extends AppCompatActivity {
 
     private void loadBitmap(){
 
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache(true);
+
         Bitmap bitmap = ( (BitmapDrawable) imageView.getDrawable() ).getBitmap();
 
         Palette.from(bitmap).maximumColorCount(55).generate(new Palette.PaletteAsyncListener() {
@@ -238,11 +274,30 @@ public class CatTwoDetailsActivity extends AppCompatActivity {
                 vibrantSwatch = palette.getVibrantSwatch();
 
                 getWindow().findViewById(R.id.rootLayout_cat2_details).setBackgroundColor(darkMutedSwatch.getRgb());
-                description.setTextColor(Color.WHITE );
-//                description.setTextColor(darkVibrantSwatch.getTitleTextColor());
+                getWindow().findViewById(R.id.title_details).setBackgroundColor(darkMutedSwatch.getRgb());
+//                description.setTextColor(Color.WHITE );
+                description.setTextColor(darkMutedSwatch.getTitleTextColor());
+
+//                Bitmap bitmaps = imageView.getDrawingCache();
+//                    int pixel = bitmap.getPixel((int)getSupportActionBar().getCustomView().getX(),(int)event.getY());
+                int[] pixels = new int[bitmap.getByteCount()];
+                bitmap.getPixels(pixels,0,40,40,40,40,40);
+
+                int r = Color.red(pixels[5]);
+                int g = Color.green(pixels[5]);
+                int b = Color.blue(pixels[5]);
+                final Drawable actionBar = getResources().getDrawable(R.drawable.ic_round_keyboard_backspace_24);
+                actionBar.setTint(Color.argb(250,200/(r+1),200/(g+1),200/(b+1) ));
+                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_round_keyboard_backspace_24);
+//
+//            title.setBackgroundColor(Color.rgb(r,g,b));
+//            description.setText("R: "+r+"\nG: "+g+"\nB: "+b);
+
+
 
             }
         });
+
     }
 
     private  File createImageFile() throws IOException {

@@ -78,10 +78,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
+        android:elevation="1dp"
         android:maxLines="2"
         android:padding="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:theme="@style/Theme.AppCompat" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#4ACCCCCC" />
 
     <TextView
         android:id="@+id/title_description"
@@ -89,6 +95,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
         android:padding="16dp"
+        android:shadowColor="@color/colorAccent"
         android:text="alova aluta alova aluta"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="#000000"

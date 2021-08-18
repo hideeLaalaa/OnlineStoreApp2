@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
@@ -21,6 +22,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.transition.Transition;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -74,6 +76,7 @@ public class CatOneDetailsActivity extends AppCompatActivity {
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getSupportActionBar().setTitle(null);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -90,9 +93,46 @@ public class CatOneDetailsActivity extends AppCompatActivity {
 
         title.setOnClickListener(v -> {
 //                loadBitmap();
-            nextSwatch(v);
-            swatchNumber++;
+//            nextSwatch(v);
+//            swatchNumber++;
+//            title.setText(getSupportActionBar().getTouchables().size());
+//            title.setText((int) getSupportActionBar().getCustomView().getY());
         });
+
+
+//        imageView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//
+//                if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction()==MotionEvent.ACTION_UP){
+//
+//                    Bitmap bitmap = imageView.getDrawingCache();
+////                    int pixel = bitmap.getPixel((int)getSupportActionBar().getCustomView().getX(),(int)event.getY());
+//                    int[] pixels = new int[bitmap.getByteCount()];
+//                    bitmap.getPixels(pixels,0,40,40,40,40,40);
+//
+//                    int r = Color.red(pixels[5]);
+//                    int g = Color.green(pixels[5]);
+//                    int b = Color.blue(pixels[5]);
+//
+//                    title.setBackgroundColor(Color.rgb(r,g,b));
+////                    description.setText("R: "+r+"\nG: "+g+"\nB: "+b);
+//                    description.setText("R: "+bitmap.getByteCount());
+//
+//
+//                    final Drawable actionBar = getResources().getDrawable(R.drawable.ic_round_keyboard_backspace_24);
+//                    actionBar.setTint(Color.argb(250,200/(r+1),200/(g+1),200/(b+1) ));
+//                    getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_round_keyboard_backspace_24);
+//
+////                    getDrawable(R.id)
+//
+//                }
+//
+//                return true;
+//            }
+//        });
+
+//        getSupportActionBar().getCustomView().getTouchables().
 
         // BEGIN_INCLUDE(detail_set_view_name)
         /*
@@ -108,6 +148,7 @@ public class CatOneDetailsActivity extends AppCompatActivity {
         loadFullSizeImage();
         title.setText(xTitle);
         description.setText(xDesc);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && addTransitionListener()) {
             // If we're running on Lollipop and we have added a listener to the shared element
@@ -161,6 +202,7 @@ public class CatOneDetailsActivity extends AppCompatActivity {
                     transition.removeListener(this);
                 }
 
+
                 @Override
                 public void onTransitionPause(Transition transition) {
                     // No-op
@@ -180,9 +222,12 @@ public class CatOneDetailsActivity extends AppCompatActivity {
 
     private void loadBitmap(){
 
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache(true);
+
         Bitmap bitmap = ( (BitmapDrawable) imageView.getDrawable() ).getBitmap();
 
-        Palette.from(bitmap).maximumColorCount(55).generate(palette -> {
+        Palette.from(bitmap).maximumColorCount(5).generate(palette -> {
             darkMutedSwatch = palette.getDarkMutedSwatch();
             dominantSwatch = palette.getDominantSwatch();
             lightMutedSwatch = palette.getLightMutedSwatch();
@@ -192,25 +237,63 @@ public class CatOneDetailsActivity extends AppCompatActivity {
             vibrantSwatch = palette.getVibrantSwatch();
 
             getWindow().findViewById(R.id.rootLayout_cat1_details).setBackgroundColor(darkMutedSwatch.getRgb());
-            description.setTextColor(Color.WHITE );
-//                description.setTextColor(darkVibrantSwatch.getTitleTextColor());
+            getWindow().findViewById(R.id.title_details).setBackgroundColor(darkMutedSwatch.getRgb());
+//            description.setTextColor(Color.WHITE );
+//            getResources().getDrawable(R.drawable.back_nav).setTint(lightVibrantSwatch.getBodyTextColor());
+
+                description.setTextColor(darkMutedSwatch.getTitleTextColor());
+
+
+
 
         });
+
+    }
+
+    private void load_navBar() {
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache(true);
+        Bitmap bitmap = ( (BitmapDrawable) imageView.getDrawable() ).getBitmap();
+
+//                    int pixel = bitmap.getPixel((int)getSupportActionBar().getCustomView().getX(),(int)event.getY());
+        int[] pixels = new int[bitmap.getByteCount()];
+        bitmap.getPixels(pixels,0,40,40,40,40,40);
+
+        int r = Color.red(pixels[5]);
+        int g = Color.green(pixels[5]);
+        int b = Color.blue(pixels[5]);
+//
+//            title.setBackgroundColor(Color.rgb(r,g,b));
+//            description.setText("R: "+r+"\nG: "+g+"\nB: "+b);
+
+
+        final Drawable actionBar = getResources().getDrawable(R.drawable.ic_round_keyboard_backspace_24);
+        actionBar.setTint(Color.argb(250,200/(r+1),200/(g+1),200/(b+1) ));
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_round_keyboard_backspace_24);
     }
 
     private void loadFullSizeImage() {
-        Picasso.get().load(xImage).networkPolicy(NetworkPolicy.OFFLINE).fit().into(imageView, new Callback() {
-            @Override
-            public void onSuccess() {
-                loadBitmap();
-            }
 
-            @Override
-            public void onError(Exception e) {
-                Picasso.get().load(xImage).fit().into(imageView);
-                loadBitmap();
-            }
-        });
+        if (xImage.contains("http")){
+
+            Picasso.get().load(xImage).networkPolicy(NetworkPolicy.OFFLINE).into(imageView, new Callback() {
+                @Override
+                public void onSuccess() {
+
+                    loadBitmap();
+                    load_navBar();
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Picasso.get().load(xImage).fit().into(imageView);
+                    loadBitmap();
+                    load_navBar();
+                }
+            });
+        }else {
+            Picasso.get().load(R.drawable.woman).into(imageView);
+        }
 
 
     }
@@ -252,6 +335,12 @@ public class CatOneDetailsActivity extends AppCompatActivity {
                 title.setText("Dominant");
 
         }
+//        final Drawable actionBar = getResources().getDrawable(R.drawable.back_nav);
+//        title.setText(actionBar.getBounds().toShortString());
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//            title.setText(actionBar.getOpticalInsets().toString());
+//        }
         if (current!=null){
             getWindow().findViewById(R.id.rootLayout_cat1_details).setBackgroundColor(current.getRgb());
             ((TextView) ( getWindow().findViewById(R.id.title_description) )).setTextColor(current.getTitleTextColor());
